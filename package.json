@@ -1,24 +1,23 @@
 {
-  "name": "gatsby-plugin-firebase",
-  "version": "0.1.8",
+  "name": "gatsby-plugin-firebase-v9",
+  "version": "1.0.0-compat.1",
   "license": "MIT",
   "description": "Gatsby plugin that provides drop-in support for Firebase",
-  "author": "Alex Luong <alex@alexluong.com>",
+  "author": "René Schubert<reneschubert@gmx.de>",
   "repository": {
     "type": "git",
-    "url": "https://github.com/alexluong/gatsby-packages.git",
-    "directory": "packages/gatsby-plugin-firebase"
+    "url": "https://github.com/renet/gatsby-plugin-firebase-v9.git"
   },
-  "homepage": "https://github.com/alexluong/gatsby-packages/tree/master/packages/gatsby-plugin-firebase#readme",
+  "homepage": "https://github.com/renet/gatsby-plugin-firebase-v9#readme",
   "keywords": [
     "gatsby",
     "gatsby-plugin",
     "firebase"
   ],
   "peerDependencies": {
-    "firebase": "7.x",
-    "gatsby": "2.x",
-    "react": "16.8.x",
-    "react-dom": "16.8.x"
+    "firebase": ">= 9.0.0",
+    "gatsby": ">= 2.0.0",
+    "react": ">= 16.8.0",
+    "react-dom": ">= 16.8.0"
   }
 }

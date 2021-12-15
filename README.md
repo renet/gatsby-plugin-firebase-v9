@@ -1,4 +1,4 @@
-# gatsby-plugin-firebase
+# gatsby-plugin-firebase-v9
 
 Provides drop-in support for Firebase
 
@@ -27,7 +27,7 @@ Provides drop-in support for Firebase
 ## Installation
 
 ```
-npm install firebase gatsby-plugin-firebase
+npm install firebase gatsby-plugin-firebase-v9
 ```
 
 ## Usage
@@ -71,25 +71,25 @@ module.exports = {
     ...otherPlugins,
 
     {
-      resolve: "gatsby-plugin-firebase",
+      resolve: "gatsby-plugin-firebase-v9",
       options: {
         features: {
-          ...allFeatures
+          ...allFeatures,
         },
         credentials: {
-          apiKey: 'YOUR_GATSBY_FIREBASE_API_KEY',
-          authDomain: 'YOUR_GATSBY_FIREBASE_AUTH_DOMAIN',
-          databaseURL: 'YOUR_GATSBY_FIREBASE_DATABASE_URL',
-          projectId: 'YOUR_GATSBY_FIREBASE_PROJECT_ID',
-          storageBucket: 'YOUR_GATSBY_FIREBASE_STORAGE_BUCKET',
-          messagingSenderId: 'YOUR_GATSBY_FIREBASE_MESSAGING_SENDER_ID',
-          appId: 'YOUR_GATSBY_FIREBASE_APP_ID',
-          measurementId: 'YOUR_GATSBY_FIREBASE_MEASUREMENT_ID',
-        }
+          apiKey: "YOUR_GATSBY_FIREBASE_API_KEY",
+          authDomain: "YOUR_GATSBY_FIREBASE_AUTH_DOMAIN",
+          databaseURL: "YOUR_GATSBY_FIREBASE_DATABASE_URL",
+          projectId: "YOUR_GATSBY_FIREBASE_PROJECT_ID",
+          storageBucket: "YOUR_GATSBY_FIREBASE_STORAGE_BUCKET",
+          messagingSenderId: "YOUR_GATSBY_FIREBASE_MESSAGING_SENDER_ID",
+          appId: "YOUR_GATSBY_FIREBASE_APP_ID",
+          measurementId: "YOUR_GATSBY_FIREBASE_MEASUREMENT_ID",
+        },
       },
     },
   ],
-}
+};
 ```
 
 ### 2. Register Gatsby plugin
@@ -102,7 +102,7 @@ module.exports = {
     ...otherPlugins,
 
     {
-      resolve: "gatsby-plugin-firebase",
+      resolve: "gatsby-plugin-firebase-v9",
       options: {
         features: {
           auth: true,
@@ -116,7 +116,7 @@ module.exports = {
       },
     },
   ],
-}
+};
 ```
 
 ### 3. Use Firebase
@@ -160,26 +160,26 @@ If you're interested in the reasoning behind this API design, you can read about
 Here is a sample component using `useFirebase`:
 
 ```jsx
-import React from "react"
-import { useFirebase } from "gatsby-plugin-firebase"
+import React from "react";
+import { useFirebase } from "gatsby-plugin-firebase-v9";
 
 function MyComponent() {
-  const [user, setUser] = React.useState()
+  const [user, setUser] = React.useState();
 
-  useFirebase(firebase => {
+  useFirebase((firebase) => {
     firebase
       .database()
       .ref("/user")
       .once("value")
-      .then(snapshot => {
-        setUser(snapshot.val())
-      })
-  }, [])
+      .then((snapshot) => {
+        setUser(snapshot.val());
+      });
+  }, []);
 
-  return <p>Hello {user ? user.name : "there"}</p>
+  return <p>Hello {user ? user.name : "there"}</p>;
 }
 
-export default MyComponent
+export default MyComponent;
 ```
 
 #### FirebaseContext
@@ -189,79 +189,77 @@ export default MyComponent
 `firebase` is saved inside `FirebaseContext`. You can use it like every other React Context. However, be aware that on first render, `firebase` is null, so you'll have to handle that case yourself.
 
 ```jsx
-import React from "react"
-import { FirebaseContext } from "gatsby-plugin-firebase"
+import React from "react";
+import { FirebaseContext } from "gatsby-plugin-firebase-v9";
 
 function MyComponent({ firebase }) {
-  const firebase = React.useContext(FirebaseContext)
-  const [user, setUser] = React.useState()
+  const firebase = React.useContext(FirebaseContext);
+  const [user, setUser] = React.useState();
 
   React.useEffect(() => {
     if (!firebase) {
-      return
+      return;
     }
-    
+
     firebase
       .database()
       .ref("/user")
       .once("value")
-      .then(snapshot => {
-        setUser(snapshot.val())
-      })
-  }, [firebase])
+      .then((snapshot) => {
+        setUser(snapshot.val());
+      });
+  }, [firebase]);
 
-  return <p>Hello {user ? user.name : "there"}</p>
+  return <p>Hello {user ? user.name : "there"}</p>;
 }
 
-export default MyComponent
+export default MyComponent;
 ```
 
 On the other hand, when you need to perform actions based on user events, this would be a great way for you to access `firebase`. At that point, `firebase` should already be initialized, so you don't have to worry about it anymore:
 
 ```jsx
-import React from "react"
-import { FirebaseContext } from "gatsby-plugin-firebase"
+import React from "react";
+import { FirebaseContext } from "gatsby-plugin-firebase-v9";
 
 function MyComponent({ firebase }) {
-  const firebase = React.useContext(FirebaseContext)
+  const firebase = React.useContext(FirebaseContext);
 
   function setUser() {
-    firebase
-      .database()
-      .ref("/user")
-      .set("Alex")
+    firebase.database().ref("/user").set("Alex");
   }
 
-  return <button onClick={setUser}>Set User Name to Alex</button>
+  return <button onClick={setUser}>Set User Name to Alex</button>;
 }
 
-export default MyComponent
+export default MyComponent;
 ```
 
 ### Notes
 
-It is **highly** recommended that you use `useFirebase` to access your `firebase` instance. Please consider reading [this blog post](https://alexluong.com) to understand the reasoning behind the API.
+It is **highly** recommended that you use `useFirebase` to access your `firebase` instance. Please consider reading [this blog post](https://alexluong.com/blog/a-journey-through-gatsby-build-process-via-building-a-plugin) to understand the reasoning behind the API.
 
 The idea is that to get Firebase to work in both client-side environment and SSR without any UX compromises, you have to take special care of the Firebase initialization. Thanks to React Hook, you can use `useFirebase` in a kinda-nice way. Without it, you'd have to constantly check whether `firebase` is initialized or not (if not, it's `null`).
 
-Here is a sample higher-order component `withFirebase` that you can write. `gatsby-plugin-firebase` does not export this helper component.
+Here is a sample higher-order component `withFirebase` that you can write. `gatsby-plugin-firebase-v9` does not export this helper component.
 
 ```jsx
-export const withFirebase = Component => props => (
-  <FirebaseContext.Consumer>
-    {firebase => <Component {...props} firebase={firebase} />}
-  </FirebaseContext.Consumer>
-)
+export const withFirebase = (Component) => (props) =>
+  (
+    <FirebaseContext.Consumer>
+      {(firebase) => <Component {...props} firebase={firebase} />}
+    </FirebaseContext.Consumer>
+  );
 ```
 
 Then, let's assume that you're on an older version of React and have to use the old API and not React Hooks, here is one way you can use it:
 
 ```jsx
-import React from "react"
-import { withFirebase } from "./withFirebase"
+import React from "react";
+import { withFirebase } from "./withFirebase";
 
 class MyComponent extends React.Component {
-  state = { user: null }
+  state = { user: null };
 
   componentDidUpdate(prevProps) {
     if (!prevProps.firebase && this.props.firebase) {
@@ -269,24 +267,23 @@ class MyComponent extends React.Component {
         .database()
         .ref("/user")
         .once("value")
-        .then(snapshot => {
-          this.setState({ user: snapshot.val() })
-        })
+        .then((snapshot) => {
+          this.setState({ user: snapshot.val() });
+        });
     }
   }
 
   render() {
-    const { user } = this.state
-    
-    return <p>Hello {user ? user.name : "there"}</p>
+    const { user } = this.state;
+
+    return <p>Hello {user ? user.name : "there"}</p>;
   }
 }
 
-export default withFirebase(MyComponent)
+export default withFirebase(MyComponent);
 ```
 
 Because you have to constantly be aware of your `firebase` instance, this API is not a part of the library.
-
 
 ## Limitations
 
@@ -294,18 +291,22 @@ One limitation of this approach is that you can only access `firebase` inside yo
 
 ```js
 export function fetchData(firebase) {
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     firebase
       .database()
       .ref("/data")
       .once("value")
-      .then(snapshot => {
-        resolve(snapshot.val())
-      })
-  })
+      .then((snapshot) => {
+        resolve(snapshot.val());
+      });
+  });
 }
 ```
 
 ## License
 
 MIT
+
+## Credits
+
+`gatsby-plugin-firebase-v9` is forked from [`gatsby-plugin-firebase`](https://github.com/alexluong/gatsby-packages/tree/master/packages/gatsby-plugin-firebase). Credits for the original implementation go to [alexluong](https://github.com/alexluong). [renet](https://github.com/renet) just refactored the plugin to replace the outdated `firebase@7` peer dependency with the `>= 9.0.0` one.
